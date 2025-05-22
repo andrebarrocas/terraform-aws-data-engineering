@@ -1,0 +1,31 @@
+# AWS Region - Choose the region closest to you
+# Common regions:
+# us-west-2 (Oregon)
+# us-east-1 (N. Virginia)
+# eu-west-1 (Ireland)
+aws_region = "us-west-2"
+
+# Environment - Use "dev", "staging", or "prod"
+environment = "dev"
+
+# Project name - Choose a meaningful name for your data engineering project
+project_name = "data-eng-platform"
+
+# VPC and Subnet Configuration
+vpc_id = "vpc-example123"  # Replace with your VPC ID
+subnet_ids = [
+  "subnet-example1",  # Replace with first subnet ID
+  "subnet-example2"   # Replace with second subnet ID
+]
+
+# EMR Configuration
+emr_cluster_name = "data-processing-cluster"
+emr_release_label = "emr-6.15.0"
+emr_instance_type = "m5.xlarge"
+
+# Redshift Configuration
+redshift_cluster_identifier = "analytics-warehouse"
+redshift_database_name = "analytics"
+redshift_master_username = "admin"
+redshift_node_type = "dc2.large"
+redshift_number_of_nodes = 2 

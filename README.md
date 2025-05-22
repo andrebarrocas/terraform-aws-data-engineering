@@ -10,7 +10,8 @@ This Terraform project manages the infrastructure for a data engineering environ
 ├── main.tf           # Main Terraform configuration
 ├── variables.tf      # Input variables
 ├── outputs.tf        # Output values
-├── terraform.tfvars  # Variable values
+├── terraform.tfvars  # Variable values (not committed)
+├── terraform.tfvars.example  # Example variable values
 └── modules/         # Reusable modules
     ├── data_lake/   # S3 data lake configuration
     ├── emr/         # EMR cluster configuration
@@ -22,6 +23,24 @@ This Terraform project manages the infrastructure for a data engineering environ
 - Terraform >= 1.0.0
 - AWS CLI configured with appropriate credentials
 - AWS account with necessary permissions
+
+## Security Setup
+
+1. Never commit `terraform.tfvars` to version control as it contains sensitive information
+2. Copy `terraform.tfvars.example` to `terraform.tfvars` and update with your values:
+```bash
+cp terraform.tfvars.example terraform.tfvars
+```
+3. Update `terraform.tfvars` with your specific values:
+   - AWS region
+   - Environment name
+   - Project name
+   - VPC and subnet IDs
+4. Keep your AWS credentials secure and never commit them to version control
+5. Use AWS IAM best practices:
+   - Use IAM roles with minimum required permissions
+   - Regularly rotate access keys
+   - Enable MFA for AWS users
 
 ## Usage
 
@@ -70,11 +89,43 @@ Key variables that need to be set in `terraform.tfvars`:
 - All sensitive data is encrypted at rest
 - Network access is restricted through security groups
 - IAM roles follow the principle of least privilege
+- Sensitive variables are marked as sensitive in Terraform
+- State files should be stored in a secure backend (e.g., S3 with encryption)
+
+## State Management
+
+It's recommended to store the Terraform state in a secure backend like S3 with:
+- Encryption at rest
+- Version control
+- State locking (using DynamoDB)
+
+Example S3 backend configuration (update `main.tf`):
+```hcl
+backend "s3" {
+  bucket         = "your-terraform-state-bucket"
+  key            = "terraform.tfstate"
+  region         = "your-region"
+  encrypt        = true
+  dynamodb_table = "terraform-state-lock"
+}
+```
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
-3. Commit your changes
+3. Commit your changes (excluding sensitive files)
 4. Push to the branch
-5. Create a Pull Request 
+5. Create a Pull Request
+
+## Security Best Practices
+
+1. Never commit sensitive data:
+   - AWS credentials
+   - terraform.tfvars
+   - .terraform directory
+   - *.tfstate files
+2. Use secure backends for state storage
+3. Encrypt sensitive data at rest
+4. Use proper IAM roles and policies
+5. Regularly audit security groups and access policies 
